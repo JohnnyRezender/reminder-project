@@ -3,12 +3,13 @@
  * Banco de dados utilizado -> SQLite
  * Autor: Johhny Rezende & Vinicius Ramos
  */
+
+ 
 require('dotenv').config();
 //const connection    = require("./connection.ts");
 const schedule      = require('node-schedule');
 const TelegramBot   = require('node-telegram-bot-api');
 
-//const token = '1317916738:AAHkccEiUPojeUQK25NoXOeFej7m1ma2i1M';
 const token = process.env.API_TOKEN_TELEGRAM;
 const chatId = process.env.CHATID_TELEGRAM;
 
