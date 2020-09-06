@@ -139,11 +139,11 @@ class RemindersController
         const reminderdateTime = startOfMinute(parseISO(DT_LEMBRETE_REM));
 
         if (isPast(reminderdateTime)) {
-            // await transaction.rollback();
+            await transaction.rollback();
 
-            // return response
-            //     .status(400)
-            //     .json({error: "Não é possivel inserir um lembrete para o passado!"});
+            return response
+                .status(400)
+                .json({error: "Não é possivel inserir um lembrete para o passado!"});
         }
 
         const reminderExists = 
