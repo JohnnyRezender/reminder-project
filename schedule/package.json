@@ -1,0 +1,19 @@
+{
+  "name": "reminder_schedule",
+  "version": "1.0.0",
+  "description": "Cronjob para envio de alertas através do boot do telegram",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "knex": "^0.21.5",
+    "node-schedule": "^1.3.2",
+    "node-telegram-bot-api": "^0.50.0",
+    "sqlite3": "^5.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Johnny Rezende & Vinicius Ramos",
+  "license": "ISC"
+}
