@@ -1,16 +1,14 @@
 import Knex from 'knex';
+import {parseISO,formatISO, startOfMinute, addDays} from 'date-fns';
 
 export async function seed(knex: Knex)
 {
-    const date = new Date();
-    const dtLembrete = date.setDate(date.getDate() + 2);
-    const dtVencimento = date.setDate(date.getDate() + 3);
+    const dtLembrete = formatISO(startOfMinute(addDays(new Date(), 3)));
 
     await knex('REMINDERS').insert([
         {
             ST_REMINDER_REM: 'Teste de lembrete',
-            DT_VENCIMENTO_REM: dtVencimento,
-            DT_LEMBRETE_REM: dtLembrete
+            DT_LEMBRETE_REM: parseISO(dtLembrete)
         }
     ])
 }

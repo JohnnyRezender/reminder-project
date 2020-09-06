@@ -1,5 +1,6 @@
 import {Request, Response} from 'express';
 import knex from '../database/connection';
+import {parseISO, startOfMinute, format, isPast} from 'date-fns';
 
 class RemindersController
 {
@@ -17,7 +18,15 @@ class RemindersController
             await knex('REMINDERS')
             .select('REMINDERS.*');
 
-        return response.status(200).json(reminders);
+        const serializedReminders = reminders.map(reminder => {
+            return {
+                ID_REMINDER_REM: reminder.ID_REMINDER_REM,
+                ST_REMINDER_REM: reminder.ST_REMINDER_REM,
+                DT_LEMBRETE_REM: format(reminder.DT_LEMBRETE_REM, "dd'/'MM'/'yyy HH':'mm")
+            }
+        });
+
+        return response.status(200).json(serializedReminders);
     }
 
     /**
@@ -31,15 +40,29 @@ class RemindersController
      */
     async create (request: Request, response: Response)
     {
-        const  {ST_REMINDER_REM} = request.body;
-        const  {DT_LEMBRETE_REM} = request.body;
+        const  {ST_REMINDER_REM, DT_LEMBRETE_REM} = request.body;
 
         const transaction = await knex.transaction();
+
+        const reminderdateTime = startOfMinute(parseISO(DT_LEMBRETE_REM));
+
+        if (isPast(reminderdateTime)) {
+            await transaction.rollback();
+
+            return response
+                .status(400)
+                .json({error: "Não é possivel inserir um lembrete para o passado!"});
+        }
+        
+        const reminder = {
+            ST_REMINDER_REM,
+            DT_LEMBRETE_REM: reminderdateTime
+        };
 
         const reminderExists = 
             await transaction('REMINDERS')
             .where('ST_REMINDER_REM', ST_REMINDER_REM)
-            .andWhere('DT_LEMBRETE_REM', DT_LEMBRETE_REM)
+            .andWhere('DT_LEMBRETE_REM', reminder.DT_LEMBRETE_REM)
             .first();
 
         if (reminderExists) {
@@ -49,13 +72,13 @@ class RemindersController
                 .json({error: 'Lembrete já criado!'});
         };
 
-        const reminder = await transaction("REMINDERS").insert(request.body);
+        const reminderCreated = await transaction("REMINDERS").insert(reminder);
 
         await transaction.commit();
 
         return response
             .status(200)
-            .json(`Lembrete#${reminder} criado com sucesso!`)
+            .json(`Lembrete#${reminderCreated} criado com sucesso!`)
     }
 
     /**
@@ -113,10 +136,20 @@ class RemindersController
                 .json({error: "Lembrete não encontrado!"});
         }
 
+        const reminderdateTime = startOfMinute(parseISO(DT_LEMBRETE_REM));
+
+        if (isPast(reminderdateTime)) {
+            await transaction.rollback();
+
+            return response
+                .status(400)
+                .json({error: "Não é possivel inserir um lembrete para o passado!"});
+        }
+
         const reminderExists = 
             await transaction('REMINDERS')
             .where('ST_REMINDER_REM', ST_REMINDER_REM)
-            .andWhere('DT_LEMBRETE_REM', DT_LEMBRETE_REM)
+            .andWhere('DT_LEMBRETE_REM', reminderdateTime)
             .whereNot('ID_REMINDER_REM', ID_REMINDER_REM)
             .first()
             .select('*');
@@ -132,13 +165,13 @@ class RemindersController
             await transaction('REMINDERS')
             .update({
                 ST_REMINDER_REM,
-                DT_LEMBRETE_REM
+                DT_LEMBRETE_REM: reminderdateTime
             })
             .where('ID_REMINDER_REM', ID_REMINDER_REM);
 
             await transaction.commit();
 
-            return response.status(200).json(`Lembrete#${reminder} alterado com sucesso!`)
+            return response.status(200).json(`Lembrete#${ID_REMINDER_REM} alterado com sucesso!`)
     }
 }
 
