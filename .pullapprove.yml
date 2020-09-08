@@ -24,6 +24,7 @@ groups:
     reviewers:
       users:
       - JohnnyRezender
+      - Ramos03
       teams:
       - team-slug
     reviews:
