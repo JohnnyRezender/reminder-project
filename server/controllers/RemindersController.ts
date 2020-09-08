@@ -1,9 +1,19 @@
 import {Request, Response} from 'express';
 import knex from '../database/connection';
 import {parseISO, startOfMinute, format, isPast} from 'date-fns';
+import schedule from 'node-schedule';
+import * as dotenv from "dotenv";
+import  TelegramBot from 'node-telegram-bot-api';
+
+dotenv.config();
 
 class RemindersController
 {
+    // Configs bot telegram
+    static token  = process.env.API_TOKEN_TELEGRAM!;
+    static chatId = process.env.CHATID_TELEGRAM!;
+    static bot    = new TelegramBot(RemindersController.token, { polling: true });
+
     /**
     * Endpoint para retornar todos os lembretes cadastrados
     * 
@@ -75,6 +85,14 @@ class RemindersController
         const reminderCreated = await transaction("REMINDERS").insert(reminder);
 
         await transaction.commit();
+
+        const a = schedule.scheduleJob(DT_LEMBRETE_REM, function ()
+        {
+            RemindersController.bot.sendMessage(
+                RemindersController.chatId,
+                "Lembrete: "+ST_REMINDER_REM
+            );
+        });
 
         return response
             .status(200)
@@ -170,6 +188,14 @@ class RemindersController
             .where('ID_REMINDER_REM', ID_REMINDER_REM);
 
             await transaction.commit();
+
+            schedule.scheduleJob(DT_LEMBRETE_REM, function ()
+            {
+                RemindersController.bot.sendMessage(
+                    RemindersController.chatId,
+                    "Lembrete: "+ST_REMINDER_REM
+                );
+            });
 
             return response.status(200).json(`Lembrete#${ID_REMINDER_REM} alterado com sucesso!`)
     }
