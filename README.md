@@ -1,11 +1,11 @@
 # Reminder
 
-## 💻 Sobre o projeto
+### 💻 Sobre o projeto
 
 Reminder é uma API para cadastro e notificações de lembretes via Telegram. 
 Este projeto tem o objetivo de iniciar um estudo referente as tecnologias nele utilizas.
 
-## 🚀 Como executar o projeto
+### 🚀 Como executar o projeto
 
 Podemos considerar este projeto como sendo divido em duas partes:
   1. Back End (pasta server) 
