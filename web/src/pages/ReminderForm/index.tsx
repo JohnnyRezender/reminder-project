@@ -14,8 +14,8 @@ const CreateReminder = () => {
         name: '',
         email: '',
         nameReminder: '',
-        reminder: '',
-        dateReminder: '',
+        ST_REMINDER_REM: '',
+        DT_LEMBRETE_REM: '',
     })
 
     const history = useHistory();
@@ -31,32 +31,29 @@ const CreateReminder = () => {
         event.preventDefault();
 
         // Recepção dos dados do form
-        const { name, email, nameReminder, reminder, dateReminder } = formData;
+        const { ST_REMINDER_REM, DT_LEMBRETE_REM } = formData;
 
         // Montagem do JSON
         const data = {
-            name,
-            email,
-            nameReminder,
-            reminder,
-            dateReminder
+            ST_REMINDER_REM,
+            DT_LEMBRETE_REM
         }
 
         // Chamada da api
-        await api.post('reminders', data);
-
+        await api.post('/reminders', data);
         alert("Lembrete cadastrado com sucesso!");
 
         history.push('/');
     }
-    
+
     return (
+        
         <div id="page-create-reminder">
             <header>
                 <img src={logoImg} alt="Reminder Jobs" />
 
                 <Link to="/">
-                    <FiArrowLeft/>
+                    <FiArrowLeft />
                     Voltar para Home
                 </Link>
             </header>
@@ -100,15 +97,15 @@ const CreateReminder = () => {
                                 <label htmlFor="textReminder">Lembrete</label>
                                 <input
                                     type="text"
-                                    name="nameReminder"
-                                    id="nameReminder"
+                                    name="ST_REMINDER_REM"
+                                    id="ST_REMINDER_REM"
                                     onChange={handleInputChange} />
                             </div>
                             <label htmlFor="dateReminder">Data do lembrete</label>
                             <input
                                 type="date"
-                                name="dateReminder"
-                                id="dateReminder"
+                                name="DT_LEMBRETE_REM"
+                                id="DT_LEMBRETE_REM"
                                 onChange={handleInputChange} />
                         </div>
                     </div>

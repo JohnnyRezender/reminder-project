@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/react-router-dom": "^5.1.5",
     "axios": "^0.20.0",
+    "modal": "^1.2.0",
     "react": "^16.13.1",
     "react-date-picker": "^8.0.1",
     "react-dom": "^16.13.1",
