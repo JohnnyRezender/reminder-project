@@ -40,8 +40,12 @@ const CreateReminder = () => {
         }
 
         // Chamada da api
-        await api.post('/reminders', data);
-        alert("Lembrete cadastrado com sucesso!");
+        await api.post('/reminders', data)
+            .then(response => {
+                alert(response.data);
+            }).catch(error => {
+                alert(error);
+            });        
 
         history.push('/');
     }
@@ -88,7 +92,8 @@ const CreateReminder = () => {
                                 type="text"
                                 name="nameReminder"
                                 id="nameReminder"
-                                onChange={handleInputChange} />
+                                onChange={handleInputChange}
+                                required />
                         </div>
                     </div>
                     <div className="field-group">
@@ -99,14 +104,16 @@ const CreateReminder = () => {
                                     type="text"
                                     name="ST_REMINDER_REM"
                                     id="ST_REMINDER_REM"
-                                    onChange={handleInputChange} />
+                                    onChange={handleInputChange}
+                                    required />
                             </div>
                             <label htmlFor="dateReminder">Data do lembrete</label>
                             <input
-                                type="date"
+                                type="datetime-local"
                                 name="DT_LEMBRETE_REM"
                                 id="DT_LEMBRETE_REM"
-                                onChange={handleInputChange} />
+                                onChange={handleInputChange}
+                                required />
                         </div>
                     </div>
                 </fieldset>

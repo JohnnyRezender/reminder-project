@@ -81,7 +81,7 @@
   
   #page-create-reminder form .field input[type=text],
   #page-create-reminder form .field input[type=email],
-  #page-create-reminder form .field input[type=date],
+  #page-create-reminder form .field input[type=datetime-local],
   #page-create-reminder form .field input[type=number] {
     flex: 1;
     background: #F0F0F5;

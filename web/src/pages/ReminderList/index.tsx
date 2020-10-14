@@ -25,7 +25,6 @@ function TeacherList() {
 
             <main>
                 <ReminderList />
-                <ReminderList />
             </main>
         </div>
     )

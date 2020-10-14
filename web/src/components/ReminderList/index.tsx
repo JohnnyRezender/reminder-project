@@ -1,24 +1,59 @@
-import React from 'react';
-import './styles.css'
+import React, { useEffect, useState } from 'react';
+import api from '../../services/api';
+import axios from 'axios';
+import './styles.css';
+
+interface Reminder {
+    ID_REMINDER_REM: number;
+    ST_REMINDER_REM: string;
+    DT_LEMBRETE_REM: Date;
+}
+
+// const getReminders = () =>{
+//     const [reminders , getReminders] = useState<Reminder[]>([]);
+
+//     // useEffect(() =>{
+//     //     api.get('/reminders').then(response =>{
+//     //         console.log(response);
+//     //         getReminders(response.data);
+//     //     });
+//     // }, []);
 
 
-function ReminderItem() {
+
+// }
+
+
+const ReminderItem = () => {
+    const [reminders, getReminders] = useState<Reminder[]>([]);
+
+    useEffect(() => {
+        api.get('/reminders').then(response => {
+            getReminders(response.data);
+        });
+    }, []);
+
+    console.log(reminders);
     return (
-        <article className="ReminderItem">
-            <header>
-                <div>
-                    <strong>Lembrete</strong>
-                </div>
-            </header>
-                <p>O Johnny é um viadão</p>
-
-            <footer>
-                <p>
-                    Data do lembrete
-                <strong>19/09/2020</strong>
-                </p>
-            </footer>
-        </article>
+        <>
+            {reminders.map(reminder => (         
+                <article className="ReminderItem" key={reminder.ID_REMINDER_REM}> 
+                  
+                    <header>
+                        <div>
+                            <strong>{reminder.ST_REMINDER_REM}</strong>
+                        </div>
+                    </header>
+                    <footer>
+                        <p>
+                                Data do lembrete
+                        <strong>{reminder.DT_LEMBRETE_REM}</strong>
+                        </p>
+                    </footer>
+                
+                </article>
+            ))}
+        </>
     )
 }
 
