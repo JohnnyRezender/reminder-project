@@ -9,21 +9,6 @@ interface Reminder {
     DT_LEMBRETE_REM: Date;
 }
 
-// const getReminders = () =>{
-//     const [reminders , getReminders] = useState<Reminder[]>([]);
-
-//     // useEffect(() =>{
-//     //     api.get('/reminders').then(response =>{
-//     //         console.log(response);
-//     //         getReminders(response.data);
-//     //     });
-//     // }, []);
-
-
-
-// }
-
-
 const ReminderItem = () => {
     const [reminders, getReminders] = useState<Reminder[]>([]);
 

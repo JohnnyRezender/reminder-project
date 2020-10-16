@@ -50,7 +50,6 @@ class RemindersController
      */
     async create (request: Request, response: Response)
     {
-        console.log("OI");
         const  {ST_REMINDER_REM, DT_LEMBRETE_REM} = request.body;
 
         const transaction = await knex.transaction();
