@@ -17,25 +17,35 @@ const ReminderItem = () => {
         });
     }, []);
 
-    console.log(reminders);
+    console.log(reminders[0]);
     return (
         <>
-            {reminders.map(reminder => (         
-                <article className="ReminderItem" key={reminder.ID_REMINDER_REM}> 
-                  
+            {reminders.map(reminder => (
+                <form className="ReminderItem" key={reminder.ID_REMINDER_REM}>
                     <header>
-                        <div>
-                            <strong>{reminder.ST_REMINDER_REM}</strong>
+                        <div className="field">
+                            <label htmlFor="textReminder">Lembrete</label>
+                            <input
+                                type="text"
+                                name="ST_REMINDER_REM"
+                                id="ST_REMINDER_REM"
+                                value={reminder.ST_REMINDER_REM}
+                                required />
                         </div>
                     </header>
                     <footer>
-                        <p>
-                                Data do lembrete
-                        <strong>{reminder.DT_LEMBRETE_REM}</strong>
-                        </p>
+                        <div className="field">
+                            <label htmlFor="dateReminder">Data do lembrete</label>
+                            <input
+                                type="datetime-local"
+                                name="DT_LEMBRETE_REM"
+                                id="DT_LEMBRETE_REM"
+                                value={reminder.DT_LEMBRETE_REM}
+                                required />
+                        </div>
                     </footer>
-                
-                </article>
+
+                </form>
             ))}
         </>
     )

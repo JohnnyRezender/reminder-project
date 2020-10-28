@@ -28,6 +28,7 @@ const CreateReminder = () => {
     // Função responsável por comunicar com a endpoint post
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
+        console.log("texto qualquer");
 
         // Recepção dos dados do form
         const { ST_REMINDER_REM, DT_LEMBRETE_REM } = formData;
@@ -44,13 +45,38 @@ const CreateReminder = () => {
                 alert(response.data);
             }).catch(error => {
                 alert(error);
-            });        
+            });
+
+        history.push('/');
+    }
+
+    // Função responsável por comunicar com a endpoint post
+    async function handleAlternate(event: FormEvent) {
+        event.preventDefault();
+        console.log(formData);
+
+        // Recepção dos dados do form
+        const { ST_REMINDER_REM, DT_LEMBRETE_REM } = formData;
+
+        // Montagem do JSON
+        const data = {
+            ST_REMINDER_REM,
+            DT_LEMBRETE_REM
+        }
+
+        // Chamada da api
+        // await api.post('/reminders', data)
+        //     .then(response => {
+        //         alert(response.data);
+        //     }).catch(error => {
+        //         alert(error);
+        //     });
 
         history.push('/');
     }
 
     return (
-        
+
         <div id="page-create-reminder">
             <header>
                 <img src={logoImg} alt="Reminder Jobs" />
@@ -68,33 +94,6 @@ const CreateReminder = () => {
                     <legend>
                         <h2>Dados</h2>
                     </legend>
-                    <div className="field">
-                        <label htmlFor="name">Nome</label>
-                        <input
-                            type="text"
-                            name="name"
-                            id="name"
-                            onChange={handleInputChange} />
-                    </div>
-                    <div className="field-group">
-                        <div className="field">
-                            <label htmlFor="email">E-mail</label>
-                            <input
-                                type="email"
-                                name="email"
-                                id="email"
-                                onChange={handleInputChange} />
-                        </div>
-                        <div className="field">
-                            <label htmlFor="nameReminder">Nome do lembrete</label>
-                            <input
-                                type="text"
-                                name="nameReminder"
-                                id="nameReminder"
-                                onChange={handleInputChange}
-                                required />
-                        </div>
-                    </div>
                     <div className="field-group">
                         <div className="field">
                             <div className="field">

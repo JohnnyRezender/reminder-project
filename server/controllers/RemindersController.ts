@@ -28,13 +28,15 @@ class RemindersController
             await knex('REMINDERS')
             .select('REMINDERS.*');
 
-        const serializedReminders = reminders.map(reminder => {
-            return {
-                ID_REMINDER_REM: reminder.ID_REMINDER_REM,
-                ST_REMINDER_REM: reminder.ST_REMINDER_REM,
-                DT_LEMBRETE_REM: format(reminder.DT_LEMBRETE_REM, "dd'/'MM'/'yyy HH':'mm")
-            }
-        });
+            const serializedReminders = reminders.map(reminder => {
+                const date = new Date(reminder.DT_LEMBRETE_REM).toISOString();
+                const formatedDate = date.substring(0,date.length-1);
+                return {
+                    ID_REMINDER_REM: reminder.ID_REMINDER_REM,
+                    ST_REMINDER_REM: reminder.ST_REMINDER_REM,
+                    DT_LEMBRETE_REM: formatedDate
+                }
+            });
 
         return response.status(200).json(serializedReminders);
     }
