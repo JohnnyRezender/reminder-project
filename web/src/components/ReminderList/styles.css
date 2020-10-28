@@ -70,9 +70,40 @@
     justify-content: space-evenly;
     transition: 0.2s;
 }
+.field label {
+    padding: 10px;
+}
+
+.dateInput {
+    width: 200px;
+    border: none;
+    border-bottom: 3px solid #aed7f3;
+}
+
+.reminderInput {
+    width: 200px;
+    border: none;
+    border-bottom: 3px solid #aed7f3;
+}
+
+.btn {
+    width: 120px !important;
+}
+
+.edit {
+     background: var(--color-secundary);
+}
+
+.delete {
+     background: var(--color-danger) !important;
+}
 
 .ReminderItem footer button:hover {
-    color: var(--color-secundary-dark);
+    background-color: var(--color-secundary-dark);
+}
+
+.delete:hover {
+    background-color: var(--color-danger-dark) !important;
 }
 
 @media (min-width: 700px) {

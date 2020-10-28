@@ -10,19 +10,7 @@ function TeacherList() {
     return (
         <div id="page-reminder-list" className="container">
             <PageHeader title="Estes são os lembretes cadastrados">
-                <form id="search-reminders">
-                    <div className="input-block">
-                        <label htmlFor="subject">Lembrete</label>
-                        <input type="text" id="subject" />
-                    </div>
-
-                    <div className="input-block">
-                        <label htmlFor="week_day">Data do lembrete</label>
-                        <input type="text" id="week_day" />
-                    </div>
-                </form>
             </PageHeader>
-
             <main>
                 <ReminderList />
             </main>
