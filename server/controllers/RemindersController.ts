@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import knex from '../database/connection';
-import {parseISO, startOfMinute, format, isPast} from 'date-fns';
+import {parseISO, startOfMinute, startOfTomorrow, isPast} from 'date-fns';
 import schedule from 'node-schedule';
 import * as dotenv from "dotenv";
 import  TelegramBot from 'node-telegram-bot-api';
@@ -112,7 +112,7 @@ class RemindersController
      */
     async remove (request: Request, response: Response)
     {
-        const {ID_REMINDER_REM} = request.body;
+        const {ID_REMINDER_REM} = request.params;
 
         const reminder = await knex('REMINDERS').where('ID_REMINDER_REM', ID_REMINDER_REM).del();
 
@@ -142,6 +142,14 @@ class RemindersController
 
         const {ST_REMINDER_REM, DT_LEMBRETE_REM} = request.body;
 
+        let reminderUpdate:any = {}
+
+        if (ST_REMINDER_REM) {
+            reminderUpdate.ST_REMINDER_REM = ST_REMINDER_REM;
+        }
+
+        let stReminder = (ST_REMINDER_REM) ? ST_REMINDER_REM : "";
+
         const transaction = await knex.transaction();
         const idReminderExists = 
             await transaction('REMINDERS')
@@ -152,24 +160,30 @@ class RemindersController
             await transaction.rollback();
 
             return response
-                .status(400)
+                .status(500)
                 .json({error: "Lembrete não encontrado!"});
         }
 
-        const reminderdateTime = startOfMinute(parseISO(DT_LEMBRETE_REM));
+        if (DT_LEMBRETE_REM) {
+            reminderUpdate.DT_LEMBRETE_REM = DT_LEMBRETE_REM;
+        } else {
+            console.log('cai aqui sempre')
+            reminderUpdate.DT_LEMBRETE_REM = startOfTomorrow();
+        }
 
+        const reminderdateTime = startOfMinute(parseISO(reminderUpdate.DT_LEMBRETE_REM));
         if (isPast(reminderdateTime)) {
             await transaction.rollback();
 
             return response
-                .status(400)
-                .json({error: "Não é possivel inserir um lembrete para o passado!"});
+                .status(200)
+                .json({status: 500, message: "Não é possivel inserir um lembrete para o passado!"});
         }
-
+        console.log(DT_LEMBRETE_REM)
         const reminderExists = 
             await transaction('REMINDERS')
-            .where('ST_REMINDER_REM', ST_REMINDER_REM)
-            .andWhere('DT_LEMBRETE_REM', reminderdateTime)
+            .where('ST_REMINDER_REM', stReminder)
+            .andWhere('DT_LEMBRETE_REM', reminderUpdate.DT_LEMBRETE_REM)
             .whereNot('ID_REMINDER_REM', ID_REMINDER_REM)
             .first()
             .select('*');
@@ -183,23 +197,20 @@ class RemindersController
 
         const reminder = 
             await transaction('REMINDERS')
-            .update({
-                ST_REMINDER_REM,
-                DT_LEMBRETE_REM: reminderdateTime
-            })
+            .update(reminderUpdate)
             .where('ID_REMINDER_REM', ID_REMINDER_REM);
 
             await transaction.commit();
 
-            schedule.scheduleJob(DT_LEMBRETE_REM, function ()
+            schedule.scheduleJob(reminderUpdate.DT_LEMBRETE_REM, function ()
             {
                 RemindersController.bot.sendMessage(
                     RemindersController.chatId,
-                    "Lembrete: "+ST_REMINDER_REM
+                    "Lembrete: "+reminderUpdate.ST_REMINDER_REM
                 );
             });
 
-            return response.status(200).json(`Lembrete#${ID_REMINDER_REM} alterado com sucesso!`)
+            return response.status(200).json({status: 200, message: `Lembrete#${ID_REMINDER_REM} alterado com sucesso!`})
     }
 }
 

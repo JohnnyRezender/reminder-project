@@ -1,7 +1,5 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import api from '../../services/api';
-import axios from 'axios';
-import { Link, useHistory } from 'react-router-dom';
 import './styles.css';
 
 interface Reminder {
@@ -14,6 +12,7 @@ const ReminderItem = () => {
     const [reminders, getReminders] = useState<Reminder[]>([]);
 
     useEffect(() => {
+        console.log("passou no get")
         api.get('/reminders').then(response => {
             getReminders(response.data);
         });
@@ -21,64 +20,62 @@ const ReminderItem = () => {
 
     const [formData, setFormData] = useState({
         ID_REMINDER_REM: '',
-        ST_REMINDER_REM: 'teste',
-        DT_LEMBRETE_REM: 'teste',
+        ST_REMINDER_REM: '',
+        DT_LEMBRETE_REM: '',
     })
-
-    const history = useHistory();
 
     async function handleDelete(id: any) {
 
         if ( !window.confirm("Excluir?") ) return;
 
-        const data = {
-            ID_REMINDER_REM: id
-        }
-
-        // Chamada da api
-        api.delete('/reminders', {data})
-            .then(response => {
-                console.log(response.data);
-            }).catch(error => {
-                console.log(error);
-            });
-
-        history.push('/');
-    }
-
-
-    function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
-        const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value });
-    }
-
-    async function handleSubmit(event: FormEvent) {
-        event.preventDefault();
-
-        // Recepção dos dados do form
-        const { ST_REMINDER_REM, DT_LEMBRETE_REM } = formData;
         
-        // Montagem do JSON
-        const data = {
-            ST_REMINDER_REM,
-            DT_LEMBRETE_REM
-        }
+        let ID_REMINDER_REM = id;
 
         // Chamada da api
-        await api.post('/reminders', data)
+        await api.delete(`/reminders/${ID_REMINDER_REM}`)
             .then(response => {
                 alert(response.data);
             }).catch(error => {
                 alert(error);
             });
 
-        history.push('/');
+        document.location.reload();
+    }
+
+
+    function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+        const { name, value } = event.target;
+        console.log("A")
+        console.log(name);
+        console.log(value);
+        
+        setFormData({ ...formData, [name]: value });
+    }
+
+    async function handleEdit(idReminder: number) {
+        if ( !window.confirm("Deseja alterar?") ) return;
+
+        const {ST_REMINDER_REM, DT_LEMBRETE_REM } = formData;
+        
+        // Montagem do JSON
+        const data = {
+            ST_REMINDER_REM: ST_REMINDER_REM,
+            DT_LEMBRETE_REM: DT_LEMBRETE_REM
+        }
+
+        await api.put(`/reminders/${idReminder}`, data)
+            .then(response => {
+                alert(response.data.message);
+            }).catch(error => {
+                alert(error.message);
+            });
+
     }
 
     return (
         <>
             {reminders.map(reminder => (
-                <form onSubmit={handleSubmit} className="ReminderItem" key={reminder.ID_REMINDER_REM}>
+                <article className="ReminderItem" key={reminder.ID_REMINDER_REM}>
                     <header>
                         <div className="field">
                             <label htmlFor="textReminder">Lembrete</label>
@@ -104,10 +101,10 @@ const ReminderItem = () => {
                                 onChange={handleInputChange}
                                 required />
                         </div>
-                        <button className="btn edit" type="submit">Alterar</button>
-                        <button className="btn delete" onClick={() => handleDelete(reminder.ID_REMINDER_REM)}>Alterar</button>
+                        <button className="btn edit" onClick={() => handleEdit(reminder.ID_REMINDER_REM)} >Alterar</button>
+                        <button className="btn delete" onClick={() => handleDelete(reminder.ID_REMINDER_REM)}>Deletar</button>
                     </footer>
-                </form>
+                </article>
             ))}
         </>
     )
