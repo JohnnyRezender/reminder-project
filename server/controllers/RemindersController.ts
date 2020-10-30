@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import knex from '../database/connection';
-import {parseISO, startOfMinute, startOfTomorrow, isPast} from 'date-fns';
+import {startOfTomorrow, isPast} from 'date-fns';
 import schedule from 'node-schedule';
 import * as dotenv from "dotenv";
 import  TelegramBot from 'node-telegram-bot-api';
@@ -29,12 +29,10 @@ class RemindersController
             .select('REMINDERS.*');
 
             const serializedReminders = reminders.map(reminder => {
-                const date = new Date(reminder.DT_LEMBRETE_REM).toISOString();
-                const formatedDate = date.substring(0,date.length-1);
                 return {
                     ID_REMINDER_REM: reminder.ID_REMINDER_REM,
                     ST_REMINDER_REM: reminder.ST_REMINDER_REM,
-                    DT_LEMBRETE_REM: formatedDate
+                    DT_LEMBRETE_REM: reminder.DT_LEMBRETE_REM
                 }
             });
 
@@ -56,19 +54,20 @@ class RemindersController
 
         const transaction = await knex.transaction();
 
-        const reminderdateTime = startOfMinute(parseISO(DT_LEMBRETE_REM));
+        //const reminderdateTime = startOfMinute(parseISO(DT_LEMBRETE_REM));
+        // const reminderdateTime = startOfMinute(addDays(new Date(DT_LEMBRETE_REM), 3));
 
-        if (isPast(reminderdateTime)) {
-            await transaction.rollback();
+        // if (isPast(reminderdateTime)) {
+        //     await transaction.rollback();
 
-            return response
-                .status(400)
-                .json({error: "Não é possivel inserir um lembrete para o passado!"});
-        }
+        //     return response
+        //         .status(400)
+        //         .json({error: "Não é possivel inserir um lembrete para o passado!"});
+        // }
         
         const reminder = {
             ST_REMINDER_REM,
-            DT_LEMBRETE_REM: reminderdateTime
+            DT_LEMBRETE_REM: DT_LEMBRETE_REM
         };
 
         const reminderExists = 
@@ -163,15 +162,15 @@ class RemindersController
                 .status(500)
                 .json({error: "Lembrete não encontrado!"});
         }
-
+        
         if (DT_LEMBRETE_REM) {
             reminderUpdate.DT_LEMBRETE_REM = DT_LEMBRETE_REM;
         } else {
-            console.log('cai aqui sempre')
             reminderUpdate.DT_LEMBRETE_REM = startOfTomorrow();
         }
 
-        const reminderdateTime = startOfMinute(parseISO(reminderUpdate.DT_LEMBRETE_REM));
+        const reminderdateTime = reminderUpdate.DT_LEMBRETE_REM;
+
         if (isPast(reminderdateTime)) {
             await transaction.rollback();
 
@@ -179,7 +178,7 @@ class RemindersController
                 .status(200)
                 .json({status: 500, message: "Não é possivel inserir um lembrete para o passado!"});
         }
-        console.log(DT_LEMBRETE_REM)
+
         const reminderExists = 
             await transaction('REMINDERS')
             .where('ST_REMINDER_REM', stReminder)
