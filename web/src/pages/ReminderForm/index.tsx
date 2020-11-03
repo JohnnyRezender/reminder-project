@@ -42,12 +42,14 @@ const CreateReminder = () => {
         // Chamada da api
         await api.post('/reminders', data)
             .then(response => {
-                alert(response.data);
+                alert(response.data.message);
+                if (response.data.status == 200) {
+                    history.push('/');
+                }
             }).catch(error => {
-                alert(error);
+                alert(error.message);
             });
 
-        history.push('/');
     }
 
     // Função responsável por comunicar com a endpoint post

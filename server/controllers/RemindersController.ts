@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import knex from '../database/connection';
-import {startOfTomorrow, isPast} from 'date-fns';
+import {startOfTomorrow, isPast, parseISO} from 'date-fns';
 import schedule from 'node-schedule';
 import * as dotenv from "dotenv";
 import  TelegramBot from 'node-telegram-bot-api';
@@ -57,13 +57,13 @@ class RemindersController
         //const reminderdateTime = startOfMinute(parseISO(DT_LEMBRETE_REM));
         // const reminderdateTime = startOfMinute(addDays(new Date(DT_LEMBRETE_REM), 3));
 
-        // if (isPast(reminderdateTime)) {
-        //     await transaction.rollback();
+        if (isPast(parseISO(DT_LEMBRETE_REM))) {
+            await transaction.rollback();
 
-        //     return response
-        //         .status(400)
-        //         .json({error: "Não é possivel inserir um lembrete para o passado!"});
-        // }
+            return response
+                .status(200)
+                .json({status: 500, message:"Não é possivel inserir um lembrete para o passado!"});
+        }
         
         const reminder = {
             ST_REMINDER_REM,
@@ -78,9 +78,10 @@ class RemindersController
 
         if (reminderExists) {
             await transaction.rollback();
+
             return response
-                .status(400)
-                .json({error: 'Lembrete já criado!'});
+                .status(200)
+                .json({status: 500, message:"Lembrete já criado!"});
         };
 
         const reminderCreated = await transaction("REMINDERS").insert(reminder);
@@ -97,7 +98,7 @@ class RemindersController
 
         return response
             .status(200)
-            .json(`Lembrete#${reminderCreated} criado com sucesso!`)
+            .json({status: 200, message:`Lembrete#${reminderCreated} criado com sucesso!`});
     }
 
     /**
@@ -171,7 +172,7 @@ class RemindersController
 
         const reminderdateTime = reminderUpdate.DT_LEMBRETE_REM;
 
-        if (isPast(reminderdateTime)) {
+        if (isPast(parseISO(reminderdateTime))) {
             await transaction.rollback();
 
             return response
