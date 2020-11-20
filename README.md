@@ -2,46 +2,18 @@
 
 ### 💻 Sobre o projeto
 
-Reminder é uma API para cadastro e notificações de lembretes via Telegram. 
-Este projeto tem o objetivo de iniciar um estudo referente as tecnologias nele utilizas.
+Projeto apresentado como trabalho de conclusao de curso para o curso bacharel em Ciência da Computação na Ceunsp (Centro Universitário N. Sra. do Patrocínio).
 
-### 🚀 Como executar o projeto
+Este projeto tem o objetivo de apresentar um estudo entre as duas arquiteturas de desenvolvimento de software: a arquitetura monolítica e a de microsserviços, através de uma avaliação comparativa entre o desenvolvimento de uma aplicação monolítica de um sistema de lista de tarefas - desenvolvido utilizando as tecnologias JavaScript e Node.JS - e uma outra aplicação idêntica construída com a arquitetura de microsserviços. Com este estudo, será possível apresentar os fundamentos básicos dessas duas arquiteturas, visualizar em cenário real, as vantagens e desvantagens que cada arquitetura apresenta, bem como análises de performance e dificuldades encontradas para desenvolver, para que assim, sirva a comunidade como material de estudo e como guia para auxiliar no desenvolvimento de novas aplicações. 
 
-Podemos considerar este projeto como sendo divido em duas partes:
-  1. Back End (pasta server) 
-  2. Front End (pasta web) 🚧 Em construção 🚧
+### 📚Fundamentação teórica
 
-💡O Front End irá precisar que o Back End esteja sendo executado para funcionar.
+#### Arquitetura monolítica
 
-### Pré-requisitos
+Em uma arquitetura monolítica, todos os processos do negócio estão implementados em uma única aplicação, onde a interface de usuário e código de acesso aos dados são combinados em um único programa a partir de uma única plataforma. Ou seja, toda a aplicação é uma única base de código que é compilada e executada uma única vez na mesma máquina, consumindo os mesmos recursos de processamento, memória, banco de dados e arquivos. Com toda essa centralização, o nível de complexidade da coordenação é reduzido. O ambiente de um sistema monolítico é mais simples de configurar e entender, possui uma curva de aprendizado menor e, obviamente, existem mais desenvolvedores familiarizados com este modelo, o que é ideal para iniciar um MVP (minimum viable product - mínimo produto viável) para validar um negócio ou produto. Todavia, desenvolver nesta arquitetura implica em acrescentar itens sempre ao mesmo bloco, aumentando cada vez mais seu tamanho e complexidade, tornando sua manutenção cada vez mais cara e mais lenta, visto que existe uma alta dependência de componentes de código.
 
-Antes de começar, é preciso ter instalado em sua máquina as seguintes ferramentas:
-[Git](https://git-scm.com), [Node.js](https://nodejs.org/en/). 
-Além disto é bom ter um editor para trabalhar com o código como [VSCode](https://code.visualstudio.com/)
+Caracterizada pela descentralização de linguagens, automação de processos de implantação e organização de projetos e equipes, a arquitetura de microsserviços surgiu com a finalidade de viabilizar o desenvolvimento de software otimizando a implantação de aplicações modulares a partir da divisão de uma aplicação em pequenas unidades independentes.
 
-### 🎲 Rodando o Back End (servidor)
+> "Um microsserviço é uma unidade de software autônoma que, juntamente com outras, compõe uma grande aplicação. Ao dividir seu aplicativo em unidades pequenas, cada parte pode ser independentemente implantada e escalada, pode ser escrita por diferentes equipes de desenvolvimento, em diferentes linguagens de programação, e pode ser testada individualmente." (STOIBER, 2017)
 
-```bash
-# Clone este repositório
-$ git clone https://github.com/JohnnyRezender/reminder-project
-
-# Acesse a pasta do projeto no terminal/cmd
-$ cd reminder-project
-
-# Vá para a pasta server
-$ cd server
-
-# Instale as dependências
-$ npm install
-
-# Execute as migrations
-$ npm run knex:migrate
-
-# Execute as seeds
-$ npm run knex:seed
-
-# Execute a aplicação em modo de desenvolvimento
-$ npm run dev
-
-# O servidor inciará na porta:3333 - acesse http://localhost:3333 
-```
+Este modelo visa criar serviços independentes, porém interligados. Desta forma, cada um dos módulos funcionam dentro do seu próprio processo, com seu banco de dados independente e utilizando a tecnologia apropriada para a sua aplicação. Esta arquitetura permite o desenvolvimento de acordo com a função, bem-delimitada e com um propósito específico. Se fosse possível resumir a arquitetura de microsserviços em uma palavra, seria especialização. Cada serviço tem uma implementação diferente, sendo assim, subir uma nova atualização em um serviço não atrapalha a disponibilidade dos outros. Assim como é possível escalar um único serviço que demande mais poder de processamento de forma independente do restante do sistema. Por ser uma estrutura mais complexa, esta arquitetura demanda um nível mais elevado de automação das implementações. Além disso, ter uma boa integração entre todos os serviços é essencial para que tudo funcione corretamente. A complexidade exige desenvolvedores com qualificação maior ou, ao menos, uma boa coordenação de DevOps (Desenvolvimento e Operações) para assegurar um bom funcionamento.
